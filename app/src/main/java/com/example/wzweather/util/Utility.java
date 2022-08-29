@@ -60,16 +60,36 @@ public class Utility {
     /**
      * 解析和处理服务器返回的县级数据
      */
+//    public static boolean handleCountyResponse(String response, int cityId) {
+//        if (!TextUtils.isEmpty(response)) {
+//            try {
+//                JSONArray allCounties = new JSONArray(response);
+//                for (int i = 0; i < allCounties.length(); i++) {
+//                    JSONObject countyJSONObject = allCounties.getJSONObject(i);
+//                    County county = new County();
+//                    county.setCountyName(countyJSONObject.getString("name"));
+//                    county.setWeatherId(countyJSONObject.getString("weather_id"));
+//                    county.setId(cityId);
+//                    county.save();
+//                }
+//                return true;
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return false;
+//    }
     public static boolean handleCountyResponse(String response, int cityId) {
         if (!TextUtils.isEmpty(response)) {
             try {
                 JSONArray allCounties = new JSONArray(response);
                 for (int i = 0; i < allCounties.length(); i++) {
-                    JSONObject countyJSONObject = allCounties.getJSONObject(i);
+                    JSONObject countyObject = allCounties.getJSONObject(i);
                     County county = new County();
-                    county.setCountyName(countyJSONObject.getString("name"));
-                    county.setWeatherId(countyJSONObject.getString("weather_id"));
-                    county.setId(cityId);
+                    county.setCountyName(countyObject.getString("name"));
+                    county.setWeatherId(countyObject.getString("weather_id"));
+                    county.setCityId(cityId);
+                    county.save();
                 }
                 return true;
             } catch (JSONException e) {

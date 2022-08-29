@@ -1,8 +1,10 @@
 package com.example.wzweather;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,11 +26,19 @@ import androidx.lifecycle.LifecycleOwner;
 import com.example.wzweather.db.City;
 import com.example.wzweather.db.County;
 import com.example.wzweather.db.Province;
+import com.example.wzweather.util.HttpUtil;
+import com.example.wzweather.util.Utility;
 
 import org.litepal.LitePal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class ChooseAreaFragment extends Fragment {
 
@@ -172,37 +184,164 @@ public class ChooseAreaFragment extends Fragment {
     /**
      * 查询选中室内所有的县，有限从数据库查询，如果没有查询到再去服务器上查询
      */
+//    private void queryCounties() {
+//        titleText.setText(selectedCity.getCityName());
+//        backButton.setVisibility(View.VISIBLE);
+//        countyList = LitePal.where("cityid=?", String.valueOf(selectedCity.getId())).find(County.class);
+//        if (countyList.size() > 0) {
+//            dataList.clear();
+//            for (County county : countyList) {
+//                dataList.add(county.getCountyName());
+//
+//            }
+//            adapter.notifyDataSetChanged();
+//            listView.setSelection(0);
+//            currentLevel = LEVEL_COUNTY;
+//        } else {
+//            int provinceCode = selectedProvince.getProvinceCode();
+//            int cityCode = selectedCity.getCityCode();
+//            Log.d("here", String.valueOf(cityCode));
+//            String address = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
+//            queryFromServer(address, "county");
+//        }
+//
+//    }
     private void queryCounties() {
         titleText.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
-        countyList = LitePal.where("cityid=?",String .valueOf(selectedCity.getId())).find(County.class);
-        if (countyList.size()>0){
+        countyList = LitePal.where("cityid = ?", String.valueOf(selectedCity.getId())).find(County.class);
+        if (countyList.size() > 0) {
             dataList.clear();
-            for (County county:countyList){
+            for (County county : countyList) {
                 dataList.add(county.getCountyName());
-
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
-            currentLevel=LEVEL_COUNTY;
-        }else{
+            currentLevel = LEVEL_COUNTY;
+        } else {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
-            String address = "http://guolin.tech/api/china/"+provinceCode+"/"+cityCode;
-            queryFromServer(address,"county");
+            String address = "http://guolin.tech/api/china/" + provinceCode + "/" + cityCode;
+            queryFromServer(address, "county");
         }
-
     }
 
     /**
      * 根据传入的地址和类型从服务器上查询省市县数据
+     *
      * @param address url地址
-     * @param type 查询的省市乡类型
+     * @param type    查询的省市乡类型
      */
+//    private void queryFromServer(String address, final String type) {
+//        showProgressDialog();
+//        HttpUtil.sendOkHttpRequest(address, new Callback() {
+//            @SuppressLint("UseRequireInsteadOfGet")
+//            @Override
+//            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+//                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        closeProgressDialog();
+//                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//
+//            @SuppressLint("UseRequireInsteadOfGet")
+//            @Override
+//            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+//                String responseText = Objects.requireNonNull(response.body()).string();
+//                boolean result = false;
+//                if ("province".equals(type)) {
+//                    result = Utility.handleProvinceResponse(responseText);
+//                } else if ("city".equals(type)) {
+//                    result = Utility.handleCityResponse(responseText, selectedProvince.getId());
+//                } else if ("county".equals(type)) {
+//                    result = Utility.handleCountyResponse(responseText, selectedCity.getId());
+//                }
+//                if (result){
+//                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            closeProgressDialog();
+//                            if ("province".equals(type)){
+//                                queryProvinces();
+//                            }else if ("city".equals(type)){
+//                                queryCities();
+//                            }else if ("county".equals(type)){
+//                                queryCounties();
+//                            }
+//                        }
+//                    });
+//                }
+//            }
+//        });
+//    }
     private void queryFromServer(String address, final String type) {
         showProgressDialog();
+        HttpUtil.sendOkHttpRequest(address, new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseText = response.body().string();
+                boolean result = false;
+                if ("province".equals(type)) {
+                    result = Utility.handleProvinceResponse(responseText);
+                } else if ("city".equals(type)) {
+                    result = Utility.handleCityResponse(responseText, selectedProvince.getId());
+                } else if ("county".equals(type)) {
+                    result = Utility.handleCountyResponse(responseText, selectedCity.getId());
+                }
+                if (result) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            closeProgressDialog();
+                            if ("province".equals(type)) {
+                                queryProvinces();
+                            } else if ("city".equals(type)) {
+                                queryCities();
+                            } else if ("county".equals(type)) {
+                                queryCounties();
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 通过runOnUiThread()方法回到主线程处理逻辑
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        closeProgressDialog();
+                        Toast.makeText(getContext(), "加载失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
+
+
+    /**
+     * 显示进度对话框
+     */
+    private void closeProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+    /**
+     * 关闭进度对话框
+     */
     private void showProgressDialog() {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("正在加载...");
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+        progressDialog.show();
     }
 }
