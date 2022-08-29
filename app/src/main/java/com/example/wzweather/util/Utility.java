@@ -1,6 +1,7 @@
 package com.example.wzweather.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.wzweather.db.City;
 import com.example.wzweather.db.County;
@@ -44,7 +45,7 @@ public class Utility {
                     JSONObject cityObject = allCities.getJSONObject(i);
                     City city = new City();
                     city.setCityName(cityObject.getString("name"));
-                    city.setId(cityObject.getInt("id"));
+                    city.setCityCode(cityObject.getInt("id"));
                     city.setProvinceID(provinceId);
                     city.save();
                 }
@@ -83,6 +84,7 @@ public class Utility {
         if (!TextUtils.isEmpty(response)) {
             try {
                 JSONArray allCounties = new JSONArray(response);
+//                Log.d("here", "handleCountyResponse: "+response);
                 for (int i = 0; i < allCounties.length(); i++) {
                     JSONObject countyObject = allCounties.getJSONObject(i);
                     County county = new County();
