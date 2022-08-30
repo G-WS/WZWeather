@@ -325,7 +325,7 @@ public class ChooseAreaFragment extends Fragment {
 
 
     /**
-     * 显示进度对话框
+     * 关闭进度对话框
      */
     private void closeProgressDialog() {
         if (progressDialog != null) {
@@ -334,7 +334,7 @@ public class ChooseAreaFragment extends Fragment {
     }
 
     /**
-     * 关闭进度对话框
+     * 显示进度对话框
      */
     private void showProgressDialog() {
         if (progressDialog == null) {
