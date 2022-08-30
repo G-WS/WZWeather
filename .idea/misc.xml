@@ -4,7 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/reverse/forwarded_workspace/WZWeather/app/src/main/res/layout/activity_main.xml" value="0.2296195652173913" />
+        <entry key="..\:/reverse/forwarded_workspace/WZWeather/app/src/main/res/layout/activity_weather.xml" value="0.2296195652173913" />
+        <entry key="..\:/reverse/forwarded_workspace/WZWeather/app/src/main/res/layout/aqi.xml" value="0.22350427350427352" />
         <entry key="..\:/reverse/forwarded_workspace/WZWeather/app/src/main/res/layout/choose_area.xml" value="0.22826086956521738" />
+        <entry key="..\:/reverse/forwarded_workspace/WZWeather/app/src/main/res/layout/forecast.xml" value="0.22435897435897437" />
+        <entry key="..\:/reverse/forwarded_workspace/WZWeather/app/src/main/res/layout/forecast_item.xml" value="0.2296195652173913" />
+        <entry key="..\:/reverse/forwarded_workspace/WZWeather/app/src/main/res/layout/now.xml" value="0.22435897435897437" />
         <entry key="..\:/reverse/forwarded_workspace/WZWeather/app/src/main/res/xml/litepal.xml" value="0.12395833333333334" />
         <entry key="..\:/reverse/forwarded_workspace/WZWeather/app/src/main/res/xml/network_security_config.xml" value="0.12395833333333334" />
       </map>
