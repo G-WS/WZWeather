@@ -4,4 +4,5 @@
     <string name="airCondition">空气质量</string>
     <string name="aqiIndex">AQI指数</string>
     <string name="pm2_5Index">PM2.5指数</string>
+    <string name="lifeSuggestion">生活建议</string>
 </resources>
