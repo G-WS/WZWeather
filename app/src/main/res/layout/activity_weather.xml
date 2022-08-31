@@ -12,33 +12,38 @@
         android:scaleType="centerCrop"
         tools:ignore="ContentDescription" />
 
-    <ScrollView
-        android:id="@+id/weather_layout"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none"
-        tools:ignore="UselessParent">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/weather_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            tools:ignore="UselessParent">
 
-            <include layout="@layout/title" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                android:orientation="vertical">
 
-            <include layout="@layout/now" />
+                <include layout="@layout/title" />
 
-            <include layout="@layout/forecast" />
+                <include layout="@layout/now" />
 
-            <include layout="@layout/aqi" />
+                <include layout="@layout/forecast" />
 
-            <include layout="@layout/suggestion" />
+                <include layout="@layout/aqi" />
 
-        </LinearLayout>
+                <include layout="@layout/suggestion" />
 
-    </ScrollView>
+            </LinearLayout>
 
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>
